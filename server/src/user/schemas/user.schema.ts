@@ -23,9 +23,8 @@ export class User {
     @Prop({ type: [{ type: String }] })
     tags: string[];
 
-    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'History' }] })
-    history: History[];
-
+    @Prop({ type: String, enum: ['user', 'admin'], default: 'user' })
+    role: string
 }
 
 export const UserSchema: SchemaFactory = SchemaFactory.createForClass(User);
