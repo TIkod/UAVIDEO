@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
@@ -6,17 +6,31 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/createUserDto';
 import { MailService } from './mail.service';
 import { randomBytes } from 'crypto';
+import { JwtService } from '@nestjs/jwt';
+import { LoginUserDto } from './dto/loginUserDto';
+import { ValidationError, validate, validateSync } from 'class-validator';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectModel('User') private readonly userModel: Model<User>,
         private mailService: MailService,
+        private readonly jwtService: JwtService,
     ) { }
 
-    async create(createUserDto: CreateUserDto): Promise<User> {
-        const salt = await bcrypt.genSalt();
-        const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
+    async register(createUserDto: CreateUserDto): Promise<{ accessToken: string }> {
+
+        const info: CreateUserDto = plainToClass(CreateUserDto, createUserDto);
+        const errors: ValidationError[] = await validate(info);
+
+        if (errors.length > 0) {
+            const errorMessage = errors.map((error) => Object.values(error.constraints)).join(', ');
+            throw new BadRequestException(errorMessage);
+        }
+
+        const salt: string = await bcrypt.genSalt();
+        const hashedPassword: string = await bcrypt.hash(createUserDto.password, salt);
 
         const createdUser = new this.userModel({
             email: createUserDto.email,
@@ -24,24 +38,53 @@ export class UserService {
             name: createUserDto.name
         });
 
-        const verificationToken = this.generateVerificationToken();
+        const verificationToken: string = this.generateVerificationToken();
         createdUser.verificationToken = verificationToken;
         await createdUser.save();
 
-        // Send verification email
-        const verificationLink = `http://127.0.0.1:5000/verify-email?token=${verificationToken}`;
+        const verificationLink: string = `http://${process.env.DOMEN_FRONT}/verify-email?token=${verificationToken}`;
         await this.mailService.sendVerificationEmail(createUserDto.email, verificationLink);
 
-        return createdUser.save();
+        const accessToken: string = this.jwtService.sign({ email: createUserDto.email });
+        return { accessToken };
     }
 
+    async login(loginUserDto: LoginUserDto): Promise<{ accessToken: string }> {
+
+        const info: LoginUserDto = plainToClass(LoginUserDto, loginUserDto);
+        const errors: ValidationError[] = await validate(info);
+
+        if (errors.length > 0) {
+            const errorMessage = errors.map((error) => Object.values(error.constraints)).join(', ');
+            throw new BadRequestException(errorMessage);
+        }
+
+        const user: User = await this.userModel.findOne({ email: loginUserDto.email });
+        if (!user) {
+            throw new UnauthorizedException('This email is not registered');
+        }
+
+        const isPasswordValid: boolean = await bcrypt.compare(loginUserDto.password, user.password);
+        if (!isPasswordValid) {
+            throw new UnauthorizedException('You entered the wrong password');
+        }
+
+        const accessToken: string = this.jwtService.sign({ email: user.email });
+        return { accessToken };
+    }
+
+
     private generateVerificationToken(): string {
-        const token = randomBytes(32).toString('hex');
+        const token: string = randomBytes(32).toString('hex');
         return token;
     }
 
     async findByEmail(email: string): Promise<User> {
         return this.userModel.findOne({ email });
+    }
+
+    async findUserByUsername(name: string): Promise<User | null> {
+        return await this.userModel.findOne({ name });
     }
 
     async findById(id: string): Promise<User> {
