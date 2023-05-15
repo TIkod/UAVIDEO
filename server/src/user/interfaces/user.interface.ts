@@ -6,5 +6,6 @@ export interface User {
     password: string;
     videos: Video[];
     tags: string[];
-    role: string
+    role: string;
+    isVerified: boolean;
 }

@@ -17,13 +17,19 @@ export class User {
     @Prop()
     password: string;
 
+    @Prop({ default: false })
+    isVerified: boolean;
+
+    @Prop()
+    verificationToken: string
+
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Video' }] })
     videos: Video[];
 
     @Prop({ type: [{ type: String }] })
     tags: string[];
 
-    @Prop({ type: String, enum: ['user', 'admin'], default: 'user' })
+    @Prop({ type: String, enum: ['USER', 'ADMIN'], default: 'USER' })
     role: string
 }
 
