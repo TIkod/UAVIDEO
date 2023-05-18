@@ -1,7 +1,7 @@
 interface IUserState {
     user: IUser | null;
-    loading: boolean;
-    error: boolean;
+    loading: boolean | null;
+    error: boolean | null;
 }
 
 interface IUser {
@@ -17,7 +17,6 @@ interface IUserReg {
     email: string,
     password: string
 }
-
 
 interface IUserLog {
     email: string;

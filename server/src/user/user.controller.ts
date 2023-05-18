@@ -19,6 +19,11 @@ export class UsersController {
         return this.userService.markAsVerified(verificationToken);
     }
 
+    @Post('refresh-token')
+    async refreshToken(@Body('token') token: string) {
+        return this.userService.refreshUserToken(token);
+    }
+
     @Post('login')
     async login(@Body() dto: LoginUserDto) {
         return this.userService.login(dto);

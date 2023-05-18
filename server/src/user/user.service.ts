@@ -45,7 +45,7 @@ export class UserService {
         const verificationLink: string = `http://${process.env.DOMEN_FRONT}/user/verifyEmail?token=${verificationToken}`;
         await this.mailService.sendVerificationEmail(createUserDto.email, verificationLink);
 
-        const accessToken: string = this.jwtService.sign({ email: createUserDto.email, name: createUserDto.name, verified: false, token: verificationToken });
+        const accessToken: string = this.jwtService.sign({ email: createUserDto.email, name: createUserDto.name, verified: false, token: verificationToken }, { expiresIn: '1h' });
         return { accessToken };
     }
 
@@ -69,10 +69,23 @@ export class UserService {
             throw new UnauthorizedException('You entered the wrong password');
         }
 
-        const accessToken: string = this.jwtService.sign({ email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken });
+        const accessToken: string = this.jwtService.sign({ email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken }, { expiresIn: '1h' });
         return { accessToken };
     }
 
+
+    async refreshUserToken(token: string): Promise<{ token: string }> {
+        try {
+            await this.jwtService.verifyAsync(token);
+            const decodedToken: any = this.jwtService.decode(token);
+            delete decodedToken.exp;
+            const accessToken: string = this.jwtService.sign(decodedToken, { expiresIn: '1h' });
+            return { token: accessToken };
+        } catch (error) {
+            console.log(error)
+            return { token: '' }
+        }
+    }
 
     private generateVerificationToken(): string {
         const token: string = randomBytes(32).toString('hex');

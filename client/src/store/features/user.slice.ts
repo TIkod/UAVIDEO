@@ -44,16 +44,17 @@ export const verifyUser = createAsyncThunk(
     'user/verifyUser',
     async (token: string) => {
         const response: AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/user/verify-email`, { verificationToken: token });
-        const data: { accessToken: string } = response.data;
-        // !!! отдавать аккаунт конкретно
-        return data;
+        const data = response.data;
+        const user = { email: data.email, name: data.name, verified: data.isVerified };
+        console.log(user);
+        return user;
     }
 )
 
 const initialState: IUserState = {
     user: null,
     loading: false,
-    error: false,
+    error: null,
 };
 
 const userSlice = createSlice({
@@ -69,12 +70,15 @@ const userSlice = createSlice({
             .addCase(verifyUser.fulfilled, (state: IUserState, action: IAction) => {
                 console.log(action.payload)
                 state.user = action.payload
+                state.loading = false;
+                state.error = false;
             })
             .addCase(registerUser.pending, (state: IUserState) => {
                 state.loading = true;
             })
             .addCase(registerUser.fulfilled, (state: IUserState, action: IAction) => {
                 state.loading = false;
+                state.error = false;
                 state.user = action.payload;
             })
             .addCase(registerUser.rejected, (state: IUserState) => {
@@ -86,6 +90,7 @@ const userSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state: IUserState, action: IAction) => {
                 state.loading = false;
+                state.error = false;
                 state.user = action.payload;
             })
             .addCase(loginUser.rejected, (state: IUserState) => {

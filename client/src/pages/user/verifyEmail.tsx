@@ -19,11 +19,10 @@ const verifyEmail = () => {
     }, [])
 
     useEffect(() => {
+        console.log(router.query.token, user?.token)
         if (router.query.token && user) {
             if (router.query.token == user.token) {
-                console.log('verify')
-                // перенаправлять на сайт
-                // сделать страничку с просьбой подтвердить аккаунт
+                router.push('/');
                 dispatch(verifyUser(router.query.token))
             }
         }

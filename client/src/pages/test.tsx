@@ -1,10 +1,12 @@
-import { withAuth } from '@/components/withAuth'
+import PrivateRoute from '../components/PrivateRoute'
 import React from 'react'
 
 const test = () => {
     return (
-        <div>test</div>
+        <PrivateRoute>
+            <div>test</div>
+        </PrivateRoute>
     )
 }
 
-export default withAuth(test)
+export default test
