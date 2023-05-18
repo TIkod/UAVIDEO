@@ -42,10 +42,10 @@ export class UserService {
         createdUser.verificationToken = verificationToken;
         await createdUser.save();
 
-        const verificationLink: string = `http://${process.env.DOMEN_FRONT}/verify-email?token=${verificationToken}`;
+        const verificationLink: string = `http://${process.env.DOMEN_FRONT}/user/verifyEmail?token=${verificationToken}`;
         await this.mailService.sendVerificationEmail(createUserDto.email, verificationLink);
 
-        const accessToken: string = this.jwtService.sign({ email: createUserDto.email });
+        const accessToken: string = this.jwtService.sign({ email: createUserDto.email, name: createUserDto.name, verified: false, token: verificationToken });
         return { accessToken };
     }
 
@@ -69,7 +69,7 @@ export class UserService {
             throw new UnauthorizedException('You entered the wrong password');
         }
 
-        const accessToken: string = this.jwtService.sign({ email: user.email });
+        const accessToken: string = this.jwtService.sign({ email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken });
         return { accessToken };
     }
 
