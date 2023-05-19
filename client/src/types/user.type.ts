@@ -5,6 +5,7 @@ interface IUserState {
 }
 
 interface IUser {
+    id: string;
     name: string,
     email: string,
     verified?: boolean,

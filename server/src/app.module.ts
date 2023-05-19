@@ -5,6 +5,7 @@ import * as path from "path";
 import { VideoModule } from './video/video.module';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './user/user.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -13,7 +14,9 @@ import { UsersModule } from './user/user.module';
     }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     ServeStaticModule.forRoot({ rootPath: path.resolve(__dirname, "static") }),
-    UsersModule
+    UsersModule,
+    VideoModule,
+    FileModule
   ]
 })
 

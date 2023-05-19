@@ -52,7 +52,7 @@ export class UserService {
         const verificationLink: string = `http://${process.env.DOMEN_FRONT}/user/verifyEmail?token=${verificationToken}`;
         await this.mailService.sendVerificationEmail(createUserDto.email, verificationLink);
 
-        const accessToken: string = this.jwtService.sign({ email: createUserDto.email, name: createUserDto.name, verified: false, token: verificationToken }, { expiresIn: '1h' });
+        const accessToken: string = this.jwtService.sign({ id: createdUser.id, email: createUserDto.email, name: createUserDto.name, verified: false, token: verificationToken }, { expiresIn: '1h' });
         return { accessToken };
     }
 
@@ -66,7 +66,7 @@ export class UserService {
             throw new BadRequestException(errorMessage);
         }
 
-        const user: User = await this.userModel.findOne({ email: loginUserDto.email });
+        const user: any = await this.userModel.findOne({ email: loginUserDto.email });
         if (!user) {
             throw new UnauthorizedException('This email is not registered');
         }
@@ -76,7 +76,7 @@ export class UserService {
             throw new UnauthorizedException('You entered the wrong password');
         }
 
-        const accessToken: string = this.jwtService.sign({ email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken }, { expiresIn: '1h' });
+        const accessToken: string = this.jwtService.sign({ id: user.id, email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken }, { expiresIn: '1h' });
         return { accessToken };
     }
 
@@ -107,7 +107,7 @@ export class UserService {
     }
 
     async findById(id: string): Promise<User> {
-        return this.userModel.findById(id);
+        return await this.userModel.findById(id);
     }
 
     async markAsVerified(verificationToken: string): Promise<{ user: User, token: string }> {
@@ -116,7 +116,7 @@ export class UserService {
             { isVerified: true }
         )
         await user.save();
-        const accessToken: string = this.jwtService.sign({ email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken }, { expiresIn: '1h' });
+        const accessToken: string = this.jwtService.sign({ id: user.id, email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken }, { expiresIn: '1h' });
         return { user, token: accessToken };
     }
 }

@@ -1,4 +1,4 @@
-import AddVideoForm from '@/components/AddVideoForm'
+import AddVideoForm from '../../components/Forms/AddVideoForm'
 import PrivateRoute from '@/components/System/PrivateRoute'
 import MainLayout from '@/layouts/MainLayout'
 import { RootState } from '@/store/store'
@@ -17,14 +17,14 @@ const profile: React.FC = () => {
                         <>
                             <p>name: {user.name}</p>
                             <p>email: {user.email}</p>
+                            <h1>Добавить видео</h1>
+                            <AddVideoForm id={user!.id} />
+                            <h1>Мои видео</h1>
                         </>
                     ) : (
                         <p>Загрузка</p>
                     )}
                 </div>
-                <h1>Добавить видео</h1>
-                <AddVideoForm />
-                <h1>Мои видео</h1>
             </PrivateRoute>
         </MainLayout>
     )

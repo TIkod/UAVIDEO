@@ -14,6 +14,12 @@ export class Video {
     @Prop()
     description: string;
 
+    @Prop()
+    videoPath: string;
+
+    @Prop()
+    picturePath: string;
+
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }] })
     comments: Comment[];
 
