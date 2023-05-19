@@ -89,7 +89,6 @@ export class UserService {
             const accessToken: string = this.jwtService.sign(decodedToken, { expiresIn: '1h' });
             return { token: accessToken };
         } catch (error) {
-            console.log(error)
             return { token: '' }
         }
     }

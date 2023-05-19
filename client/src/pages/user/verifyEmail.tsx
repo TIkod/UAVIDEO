@@ -19,7 +19,6 @@ const verifyEmail = () => {
     }, [])
 
     useEffect(() => {
-        console.log(router.query.token, user?.token)
         if (router.query.token && user) {
             if (router.query.token == user.token) {
                 router.push('/');

@@ -1,9 +1,12 @@
-import VerifyText from '@/components/VerifyText';
+import Header from '@/components/Layout/Header';
+import VerifyText from '../components/System/VerifyText';
 import { initUser } from '@/store/features/user.slice';
 import { AppDispatch, RootState } from '@/store/store';
 import { NextRouter, useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import Footer from '@/components/Layout/Footer';
+import Main from '@/components/Layout/Main';
 
 interface MainLayoutProps {
     children: ReactNode;
@@ -17,8 +20,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     const dispatch: AppDispatch = useDispatch()
     const [loadUser, setLoadUser] = useState(false)
 
-    console.log(user, 'MAIN LAYOUT')
-
     useEffect(() => {
         if (localStorage.getItem('token')) {
             dispatch(initUser(localStorage.getItem('token')))
@@ -29,8 +30,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
     useEffect(() => {
         if (loadUser == true) {
-            console.log(1)
-            console.log(typeof window !== 'undefined')
             if (!user && typeof window !== 'undefined') {
                 router.push('/user/login')
             }
@@ -44,8 +43,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 {
                     user.verified ?
                         <>
-                            MainLayout
-                            {children}
+                            <Header />
+                            <Main>
+                                {children}
+                            </Main>
+                            <Footer />
                         </>
                         :
                         <VerifyText />

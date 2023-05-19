@@ -63,6 +63,12 @@ const userSlice = createSlice({
         initUser: (state: IUserState, action: { payload: any, type: any }) => {
             state.user = jwtDecode(action.payload);
         },
+        exit: (state: IUserState) => {
+            state.loading = null;
+            state.error = null;
+            state.user = null;
+            localStorage.clear();
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -98,5 +104,5 @@ const userSlice = createSlice({
     },
 });
 
-export const { initUser } = userSlice.actions;
+export const { initUser, exit } = userSlice.actions;
 export default userSlice.reducer;

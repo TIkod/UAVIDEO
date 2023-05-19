@@ -1,4 +1,4 @@
-import NotAuthRoute from '@/components/NotAuthRoute'
+import NotAuthRoute from '../../components/System/NotAuthRoute'
 import RegistrationForm from '../../components/Forms/RegistrationForm'
 import React from 'react'
 
