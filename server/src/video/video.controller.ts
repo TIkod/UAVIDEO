@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFiles, BadRequestException } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { Video } from './schemas/video.schema';
 import { CreateVideoDto } from './dto/CreateVideoDto';
@@ -14,6 +14,9 @@ export class VideoController {
         { name: 'video', maxCount: 1 }
     ]))
     async createVideo(@UploadedFiles() files, @Body() createVideoDto: CreateVideoDto): Promise<Video> {
+        if (Object.keys(files).includes('video') == false || Object.keys(files).includes('picture') == false) {
+            throw new BadRequestException("Video and picture is required");
+        }
         const { picture, video } = files;
         return this.videoService.createVideo(createVideoDto, picture[0], video[0]);
     }
