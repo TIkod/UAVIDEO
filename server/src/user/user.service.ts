@@ -29,8 +29,15 @@ export class UserService {
             throw new BadRequestException(errorMessage);
         }
 
+        const existingUser: User = await this.userModel.findOne({ email: createUserDto.email });
+        if (existingUser) {
+            throw new BadRequestException('Пользователь с такой почтой уже зарегистрирован');
+        }
+
         const salt: string = await bcrypt.genSalt();
         const hashedPassword: string = await bcrypt.hash(createUserDto.password, salt);
+
+
 
         const createdUser = new this.userModel({
             email: createUserDto.email,
@@ -104,13 +111,13 @@ export class UserService {
         return this.userModel.findById(id);
     }
 
-    async markAsVerified(verificationToken: string): Promise<User> {
+    async markAsVerified(verificationToken: string): Promise<{ user: User, token: string }> {
         const user = await this.userModel.findOneAndUpdate(
             { verificationToken },
-            { isVerified: true, verificationToken: undefined },
-            { new: true }
+            { isVerified: true }
         )
-
-        return user;
+        await user.save();
+        const accessToken: string = this.jwtService.sign({ email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken }, { expiresIn: '1h' });
+        return { user, token: accessToken };
     }
 }

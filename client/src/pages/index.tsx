@@ -1,10 +1,11 @@
+import MainLayout from '@/layouts/MainLayout';
 import RegistrationForm from '../components/Forms/RegistrationForm';
 
 const HomePage: React.FC = () => {
     return (
-        <div>
+        <MainLayout>
             <h1>Home</h1>
-        </div>
+        </MainLayout>
     );
 };
 

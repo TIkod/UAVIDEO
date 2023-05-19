@@ -1,12 +1,13 @@
+import NotAuthRoute from '@/components/NotAuthRoute'
 import RegistrationForm from '../../components/Forms/RegistrationForm'
 import React from 'react'
 
 const register: React.FC = () => {
     return (
-        <div>
+        <NotAuthRoute>
             <h1>Регистрация</h1>
             <RegistrationForm />
-        </div>
+        </NotAuthRoute>
     )
 }
 

@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
 import { StatusCodes } from 'http-status-codes';
 import axios, { AxiosResponse } from 'axios';
-import cookie from 'cookie';
 
 type IAction = PayloadAction<any, string, {
     arg: any
@@ -44,9 +43,9 @@ export const verifyUser = createAsyncThunk(
     'user/verifyUser',
     async (token: string) => {
         const response: AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/user/verify-email`, { verificationToken: token });
-        const data = response.data;
+        const data = response.data.user;
+        localStorage.setItem('token', response.data.token);
         const user = { email: data.email, name: data.name, verified: data.isVerified };
-        console.log(user);
         return user;
     }
 )
@@ -68,7 +67,6 @@ const userSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(verifyUser.fulfilled, (state: IUserState, action: IAction) => {
-                console.log(action.payload)
                 state.user = action.payload
                 state.loading = false;
                 state.error = false;
