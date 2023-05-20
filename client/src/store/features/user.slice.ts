@@ -2,12 +2,8 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
 import { StatusCodes } from 'http-status-codes';
 import axios, { AxiosResponse } from 'axios';
+import { IAction } from '@/types/store.type';
 
-type IAction = PayloadAction<any, string, {
-    arg: any
-    requestId?: string;
-    requestStatus?: "fulfilled";
-}, never>
 
 export const registerUser = createAsyncThunk(
     'user/registerUser',

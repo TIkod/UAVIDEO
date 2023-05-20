@@ -13,7 +13,7 @@ import { FileModule } from './file/file.module';
       isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.MONGO_URI),
-    ServeStaticModule.forRoot({ rootPath: path.resolve(__dirname, "static") }),
+    ServeStaticModule.forRoot({ rootPath: path.join(__dirname, '..', 'static') }),
     UsersModule,
     VideoModule,
     FileModule

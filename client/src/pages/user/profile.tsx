@@ -1,7 +1,8 @@
+import MyVideo from '@/components/MyVideo'
 import AddVideoForm from '../../components/Forms/AddVideoForm'
 import PrivateRoute from '@/components/System/PrivateRoute'
 import MainLayout from '@/layouts/MainLayout'
-import { RootState } from '@/store/store'
+import { RootState } from '@/types/store.type'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
@@ -17,9 +18,8 @@ const profile: React.FC = () => {
                         <>
                             <p>name: {user.name}</p>
                             <p>email: {user.email}</p>
-                            <h1>Добавить видео</h1>
                             <AddVideoForm id={user!.id} />
-                            <h1>Мои видео</h1>
+                            <MyVideo userID={user.id} count={5} offset={0} />
                         </>
                     ) : (
                         <p>Загрузка</p>

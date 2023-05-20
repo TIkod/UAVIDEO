@@ -29,7 +29,8 @@ export class VideoService {
         return await createdVideo.save();
     }
 
-    async getVideosByUser(userId: string): Promise<Video[]> {
-        return await this.videoModel.find({ user: userId });
+    async getVideosByUser(userId: string, count: number = 5, offset: number = 0): Promise<Video[]> {
+        const videos: Video[] = await this.videoModel.find({ user: userId }).skip(Number(offset)).limit(Number(count));
+        return videos
     }
 }

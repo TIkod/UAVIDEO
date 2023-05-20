@@ -1,15 +1,21 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { AppDispatch } from '@/types/store.type';
+import { useDispatch } from 'react-redux';
 
 interface AddVideoFormProps {
     id: string;
 }
 
 const AddVideoForm: React.FC<AddVideoFormProps> = ({ id }) => {
+
+    const dispatch: AppDispatch = useDispatch()
+
     const [videoData, setVideoData] = useState({
         name: '',
         description: '',
-        videoPath: {},
+        video: {},
+        picture: {},
         user: id,
     });
 
@@ -18,12 +24,8 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ id }) => {
         setVideoData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    const handleSubmit = async (event: React.FormEvent) => {
+    const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        try {
-            await axios.post('/api/videos', videoData);
-        } catch (error) {
-        }
     };
 
     return (
@@ -50,12 +52,22 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ id }) => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="videoPath">Video Path:</label>
+                    <label htmlFor="videoPath">Video:</label>
                     <input
                         type="file"
                         id="videoPath"
                         name="videoPath"
                         accept='video/*'
+                        onChange={handleInputChange}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="picturePath">Picture:</label>
+                    <input
+                        type="file"
+                        id="picturePath"
+                        name="picturePath"
+                        accept='image/*'
                         onChange={handleInputChange}
                     />
                 </div>

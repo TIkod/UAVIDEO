@@ -1,8 +1,9 @@
-import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFiles, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFiles, BadRequestException, Query, UseGuards } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { Video } from './schemas/video.schema';
 import { CreateVideoDto } from './dto/CreateVideoDto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('videos')
 export class VideoController {
@@ -14,6 +15,7 @@ export class VideoController {
         { name: 'video', maxCount: 1 }
     ]))
     async createVideo(@UploadedFiles() files, @Body() createVideoDto: CreateVideoDto): Promise<Video> {
+
         if (Object.keys(files).includes('video') == false || Object.keys(files).includes('picture') == false) {
             throw new BadRequestException("Video and picture is required");
         }
@@ -22,7 +24,7 @@ export class VideoController {
     }
 
     @Get('user/:userId')
-    async getVideosByUser(@Param('userId') userId: string): Promise<Video[]> {
-        return this.videoService.getVideosByUser(userId);
+    async getVideosByUser(@Param('userId') userId: string, @Query('count') count: number, @Query('offset') offset: number,): Promise<Video[]> {
+        return this.videoService.getVideosByUser(userId, count, offset);
     }
 }

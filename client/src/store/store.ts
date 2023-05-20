@@ -1,17 +1,14 @@
-import { AnyAction, ThunkDispatch, combineReducers, configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import userReducer from './features/user.slice';
-import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
+import videoUserReducer from './features/video.user.slice';
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
     auth: userReducer,
+    videoAuth: videoUserReducer
 });
 
 const store = configureStore({
     reducer: rootReducer,
 });
-
-export type RootState = ReturnType<typeof rootReducer>;
-
-export type AppDispatch = ThunkDispatch<RootState, void, AnyAction>;
 
 export default store;
