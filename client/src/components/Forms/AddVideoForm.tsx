@@ -2,6 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { AppDispatch } from '@/types/store.type';
 import { useDispatch } from 'react-redux';
+import { addVideo } from '@/store/features/video.user.slice';
 
 interface AddVideoFormProps {
     id: string;
@@ -17,6 +18,7 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ id }) => {
         video: {},
         picture: {},
         user: id,
+        tags: ''
     });
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -25,6 +27,8 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ id }) => {
     };
 
     const handleSubmit = (event: React.FormEvent) => {
+        console.log(videoData)
+        dispatch(addVideo(videoData))
         event.preventDefault();
     };
 
@@ -58,7 +62,10 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ id }) => {
                         id="videoPath"
                         name="videoPath"
                         accept='video/*'
-                        onChange={handleInputChange}
+                        onChange={(e) => {
+                            if (e.target.files) setVideoData({ ...videoData, video: e.target.files[0] })
+                        }
+                        }
                     />
                 </div>
                 <div>
@@ -68,6 +75,18 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ id }) => {
                         id="picturePath"
                         name="picturePath"
                         accept='image/*'
+                        onChange={(e) => {
+                            if (e.target.files) setVideoData({ ...videoData, picture: e.target.files[0] })
+                        }
+                        }
+                    />
+                </div>
+                <div>
+                    <label htmlFor="tags">tags:</label>
+                    <textarea
+                        id="tags"
+                        name="tags"
+                        value={videoData.tags}
                         onChange={handleInputChange}
                     />
                 </div>

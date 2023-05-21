@@ -19,6 +19,7 @@ export class VideoController {
         if (Object.keys(files).includes('video') == false || Object.keys(files).includes('picture') == false) {
             throw new BadRequestException("Video and picture is required");
         }
+
         const { picture, video } = files;
         return this.videoService.createVideo(createVideoDto, picture[0], video[0]);
     }

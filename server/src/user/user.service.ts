@@ -29,7 +29,7 @@ export class UserService {
             throw new BadRequestException(errorMessage);
         }
 
-        const existingUser: User = await this.userModel.findOne({ email: createUserDto.email });
+        const existingUser: User = await this.userModel.findOne({ email: createUserDto.email }).exec();
         if (existingUser) {
             throw new BadRequestException('Пользователь с такой почтой уже зарегистрирован');
         }
@@ -66,7 +66,7 @@ export class UserService {
             throw new BadRequestException(errorMessage);
         }
 
-        const user: any = await this.userModel.findOne({ email: loginUserDto.email });
+        const user: any = await this.userModel.findOne({ email: loginUserDto.email }).exec();
         if (!user) {
             throw new UnauthorizedException('This email is not registered');
         }
@@ -99,23 +99,25 @@ export class UserService {
     }
 
     async findByEmail(email: string): Promise<User> {
-        return this.userModel.findOne({ email });
+        return this.userModel.findOne({ email }).exec();
     }
 
     async findUserByUsername(name: string): Promise<User | null> {
-        return await this.userModel.findOne({ name });
+        return await this.userModel.findOne({ name }).exec();
     }
 
     async findById(id: string): Promise<User> {
-        return await this.userModel.findById(id);
+        return await this.userModel.findById(id).exec();
     }
 
     async markAsVerified(verificationToken: string): Promise<{ user: User, token: string }> {
         const user = await this.userModel.findOneAndUpdate(
             { verificationToken },
-            { isVerified: true }
-        )
-        await user.save();
+            { isVerified: true },
+            { new: true }
+        ).exec()
+        await user.save()
+        console.log(user);
         const accessToken: string = this.jwtService.sign({ id: user.id, email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken }, { expiresIn: '1h' });
         return { user, token: accessToken };
     }

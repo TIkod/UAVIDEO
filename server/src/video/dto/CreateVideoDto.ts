@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 
 export class CreateVideoDto {
     @IsNotEmpty({ message: 'name is required' })
-    @Length(4, 15, { message: 'Name must be between 4 and 15 characters' })
+    @Length(4, 50, { message: 'Name must be between 4 and 50 characters' })
     name: string;
 
     @IsNotEmpty({ message: 'description is required' })
@@ -12,4 +12,7 @@ export class CreateVideoDto {
 
     @IsNotEmpty({ message: 'user is required' })
     user: string;
+
+    @IsNotEmpty({ message: 'tags is required' })
+    tags: string
 }

@@ -8,6 +8,7 @@ export interface IVideo {
     videoPath: string;
     picturePath: string;
     comments: string[];
+    tags: string[];
     user: string;
 }
 
@@ -20,7 +21,8 @@ export interface IVideoUserState {
 export interface IVideoData {
     name: string,
     description: string,
-    video: object,
-    picture: object,
+    video: any,
+    picture: any,
     user: string,
+    tags: string
 }
