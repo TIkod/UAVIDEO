@@ -58,7 +58,7 @@ const videoUserSlice = createSlice({
                 state.loading = false;
                 state.error = false;
                 const video: IVideo = {
-                    id: action.payload.id,
+                    _id: action.payload.id,
                     name: action.payload.name,
                     description: action.payload.description,
                     videoPath: action.payload.videoPath,

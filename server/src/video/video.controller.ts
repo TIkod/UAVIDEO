@@ -1,9 +1,8 @@
-import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFiles, BadRequestException, Query, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, UseInterceptors, UploadedFiles, BadRequestException, Query, UseGuards, Res } from '@nestjs/common';
 import { VideoService } from './video.service';
 import { Video } from './schemas/video.schema';
 import { CreateVideoDto } from './dto/CreateVideoDto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('videos')
 export class VideoController {
@@ -24,8 +23,18 @@ export class VideoController {
         return this.videoService.createVideo(createVideoDto, picture[0], video[0]);
     }
 
+    @Get(':id')
+    async getVideoById(@Param('id') id: string): Promise<Video> {
+        return this.videoService.getVideoById(id);
+    }
+
     @Get('user/:userId')
     async getVideosByUser(@Param('userId') userId: string, @Query('count') count: number, @Query('offset') offset: number,): Promise<Video[]> {
         return this.videoService.getVideosByUser(userId, count, offset);
+    }
+
+    @Get('/stream/:id')
+    async streamVideo(@Param('id') videoId: string, @Res() response: Response) {
+        return this.videoService.getStreamVideo(videoId, response);
     }
 }

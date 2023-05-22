@@ -1,6 +1,7 @@
 import { loadVideos } from '@/store/features/video.user.slice';
 import { AppDispatch, RootState } from '@/types/store.type'
 import { IVideo } from '@/types/video.user.type';
+import { NextRouter, useRouter } from 'next/router';
 import React, { ReactElement, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -14,6 +15,7 @@ const MyVideo: React.FC<MyVideoProps> = ({ userID, count, offset }) => {
 
     const videos: IVideo[] = useSelector((state: RootState) => state.videoAuth.videos)
     const dispatch: AppDispatch = useDispatch();
+    const router: NextRouter = useRouter()
 
     useEffect(() => {
         dispatch(loadVideos({ userID, count, offset }))
@@ -25,7 +27,7 @@ const MyVideo: React.FC<MyVideoProps> = ({ userID, count, offset }) => {
             {
                 videos.map((v: IVideo): ReactElement => (
                     <div key={v.name}>
-                        <p>
+                        <p onClick={() => router.push(`/video/${v._id}`)}>
                             <img src={process.env.NEXT_PUBLIC_URL_BACK + '/' + v.picturePath} alt="banner" style={{ width: "200px", height: "100px" }} />
                         </p>
                         <p>{v.name}</p>

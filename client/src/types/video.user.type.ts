@@ -2,7 +2,7 @@
 
 
 export interface IVideo {
-    id: string;
+    _id: string;
     name: string;
     description: string;
     videoPath: string;
