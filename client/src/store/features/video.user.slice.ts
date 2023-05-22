@@ -21,7 +21,9 @@ export const addVideo = createAsyncThunk('videoUser/addVideo', async (videoData:
     formData.append('user', videoData.user)
     formData.append('picture', videoData.picture)
     formData.append('video', videoData.video)
-    formData.append('tags', videoData.tags)
+    videoData.tags.split(' ').forEach((tag: string) => {
+        formData.append('tags[]', tag);
+    })
     const response: AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/videos`, formData, {
         headers: { 'Content-Type': "multipart/form-data" }
     });

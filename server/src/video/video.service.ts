@@ -23,9 +23,6 @@ export class VideoService {
             throw new BadRequestException(errorMessage);
         }
 
-        // Реализовать идею разбора хештегов 
-
-
         const videoPath = this.fileService.createFile(FileType.VIDEO, video)
         const picturePath = this.fileService.createFile(FileType.IMAGE, picture)
         const createdVideo = await this.videoModel.create({ ...createVideoDto, videoPath: videoPath, picturePath: picturePath })

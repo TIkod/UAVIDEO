@@ -14,5 +14,5 @@ export class CreateVideoDto {
     user: string;
 
     @IsNotEmpty({ message: 'tags is required' })
-    tags: string
+    tags: string[]
 }
