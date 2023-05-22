@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 const profile: React.FC = () => {
     const user: IUser | null = useSelector((state: RootState) => state.auth.user)
 
-
+    console.log(user)
 
     return (
         <MainLayout>
@@ -20,8 +20,8 @@ const profile: React.FC = () => {
                         <>
                             <p>name: {user.name}</p>
                             <p>email: {user.email}</p>
-                            <AddVideoForm id={user!.id} />
-                            <MyVideo userID={user.id} count={5} offset={0} />
+                            <AddVideoForm id={user!._id} />
+                            <MyVideo userID={user._id} count={5} offset={0} />
                         </>
                     ) : (
                         <p>Загрузка</p>

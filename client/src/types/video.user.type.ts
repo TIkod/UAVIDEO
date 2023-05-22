@@ -1,6 +1,5 @@
 
 
-
 export interface IVideo {
     _id: string;
     name: string;
@@ -10,13 +9,16 @@ export interface IVideo {
     comments: string[];
     tags: string[];
     user: string;
+    viewCount: number;
 }
+
 
 export interface IVideoUserState {
     videos: IVideo[],
     loading: boolean | null;
     error: boolean | null;
 }
+
 
 export interface IVideoData {
     name: string,

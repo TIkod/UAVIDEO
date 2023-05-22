@@ -52,7 +52,7 @@ export class UserService {
         const verificationLink: string = `http://${process.env.DOMEN_FRONT}/user/verifyEmail?token=${verificationToken}`;
         await this.mailService.sendVerificationEmail(createUserDto.email, verificationLink);
 
-        const accessToken: string = this.jwtService.sign({ id: createdUser.id, email: createUserDto.email, name: createUserDto.name, verified: false, token: verificationToken }, { expiresIn: '1h' });
+        const accessToken: string = this.jwtService.sign({ _id: createdUser.id, email: createUserDto.email, name: createUserDto.name, verified: false, token: verificationToken }, { expiresIn: '1h' });
         return { accessToken };
     }
 
@@ -76,7 +76,8 @@ export class UserService {
             throw new UnauthorizedException('You entered the wrong password');
         }
 
-        const accessToken: string = this.jwtService.sign({ id: user.id, email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken }, { expiresIn: '1h' });
+        const accessToken: string = this.jwtService.sign({ _id: user.id, email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken }, { expiresIn: '1h' });
+        console.log(accessToken);
         return { accessToken };
     }
 
@@ -84,9 +85,9 @@ export class UserService {
     async refreshUserToken(token: string): Promise<{ token: string }> {
         try {
             await this.jwtService.verifyAsync(token);
-            const decodedToken: any = this.jwtService.decode(token);
-            delete decodedToken.exp;
-            const accessToken: string = this.jwtService.sign(decodedToken, { expiresIn: '1h' });
+            const decode: any = this.jwtService.decode(token);
+            const user: any = await this.findById(decode._id);
+            const accessToken: string = this.jwtService.sign({ _id: user!._id, email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken }, { expiresIn: '1h' });
             return { token: accessToken };
         } catch (error) {
             return { token: '' }
@@ -117,8 +118,7 @@ export class UserService {
             { new: true }
         ).exec()
         await user.save()
-        console.log(user);
-        const accessToken: string = this.jwtService.sign({ id: user.id, email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken }, { expiresIn: '1h' });
+        const accessToken: string = this.jwtService.sign({ _id: user.id, email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken }, { expiresIn: '1h' });
         return { user, token: accessToken };
     }
 }

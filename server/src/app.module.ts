@@ -6,6 +6,7 @@ import { VideoModule } from './video/video.module';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './user/user.module';
 import { FileModule } from './file/file.module';
+import { ViewModule } from './view/view.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { FileModule } from './file/file.module';
     ServeStaticModule.forRoot({ rootPath: path.join(__dirname, '..', 'static') }),
     UsersModule,
     VideoModule,
-    FileModule
+    ViewModule,
+    FileModule,
   ]
 })
 

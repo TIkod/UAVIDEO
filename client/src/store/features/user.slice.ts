@@ -42,7 +42,7 @@ export const verifyUser = createAsyncThunk(
         console.log(response)
         const data = response.data.user;
         localStorage.setItem('token', response.data.token);
-        const user = { id: data.id, email: data.email, name: data.name, verified: data.isVerified };
+        const user = { _id: data.id, email: data.email, name: data.name, verified: data.isVerified };
         console.log(user)
         return user;
     }

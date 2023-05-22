@@ -65,7 +65,8 @@ const videoUserSlice = createSlice({
                     picturePath: action.payload.picturePath,
                     user: action.payload.user,
                     tags: action.payload.tags,
-                    comments: action.payload.comments
+                    comments: action.payload.comments,
+                    viewCount: action.payload.viewCount
                 }
                 state.videos.push(video);
             })

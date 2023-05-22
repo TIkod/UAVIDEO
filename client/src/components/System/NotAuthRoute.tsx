@@ -2,8 +2,8 @@ import { ReactNode, useEffect, useState } from 'react';
 import { NextRouter, useRouter } from 'next/router';
 import axios, { AxiosResponse } from 'axios';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/store/store';
 import { initUser } from '@/store/features/user.slice';
+import { AppDispatch } from '@/types/store.type';
 
 
 interface NotAuthRouteProps {

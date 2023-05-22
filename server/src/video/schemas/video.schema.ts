@@ -23,6 +23,9 @@ export class Video {
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }] })
     comments: Comment[];
 
+    @Prop({ default: 0 })
+    viewCount: number;
+
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
     user: User;
 

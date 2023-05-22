@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { NextRouter, useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store/store';
 import { initUser, verifyUser } from '@/store/features/user.slice';
+import { AppDispatch, RootState } from '@/types/store.type';
 
 const verifyEmail = () => {
 

@@ -2,8 +2,8 @@ import { ReactNode, useEffect, useState } from 'react';
 import { NextRouter, useRouter } from 'next/router';
 import axios, { AxiosResponse } from 'axios';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/store/store';
 import { initUser } from '@/store/features/user.slice';
+import { AppDispatch } from '@/types/store.type';
 
 
 interface PrivateRouteProps {
@@ -24,13 +24,14 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
 
         if (requestRefresh == false) {
             setRequestRefresh(true)
+            console.log(1)
             const response: AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/user/refresh-token`, { 'token': token });
             const newToken: string = response.data.token;
 
             if (newToken == "") {
                 return router.push('/user/login');
             }
-
+            console.log(newToken);
             localStorage.setItem('token', newToken);
             dispatch(initUser(token));
         }

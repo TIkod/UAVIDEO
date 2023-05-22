@@ -20,7 +20,7 @@ import { JwtStrategy } from './jwt.strategy';
         ])],
     controllers: [UsersController],
     providers: [UserService, MailService, JwtStrategy],
-    exports: [PassportModule, JwtStrategy]
+    exports: [MailService]
 })
 
 export class UsersModule { }

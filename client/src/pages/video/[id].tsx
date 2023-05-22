@@ -1,51 +1,82 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { NextRouter, useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import axios, { AxiosResponse } from 'axios'
 import { IVideo } from '@/types/video.user.type'
+import { StatusCodes } from 'http-status-codes'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/types/store.type'
+import PrivateRoute from '@/components/System/PrivateRoute'
+import MainLayout from '../../layouts/MainLayout'
 
 
 const VideoPage = ({ video }: { video: IVideo }) => {
+    const user: IUser | null = useSelector((state: RootState) => state.auth.user)
     const router: NextRouter = useRouter()
-
     const videoRef = useRef<HTMLVideoElement | null>(null);
+    const [errorVideo, setErrorVideo] = useState(false);
+    const [countView, setCountView] = useState(0);
 
     useEffect(() => {
-        const fetchVideo = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_URL_BACK}/videos/stream/${video._id}`); // Замените "videoId" на фактический идентификатор видео
-                if (response.ok) {
-                    const videoBlob = await response.blob();
-                    const videoUrl = URL.createObjectURL(videoBlob);
-                    if (videoRef.current) {
-                        videoRef.current.src = videoUrl;
-                    }
-                } else {
-                    console.error('Failed to fetch video');
-                }
-            } catch (error) {
-                console.error('Error fetching video:', error);
-            }
-        };
-
         fetchVideo();
+        upCountView();
     }, []);
 
-    return (
-        <div>
-            {
-                video ?
-                    <>
-                        <p>{video.name}</p>
-                        <p>{video.description}</p>
-                        <button onClick={() => router.back()}>back</button>
-                        <video ref={videoRef} controls style={{ width: "300px" }} />
-                    </>
-                    :
-                    <>Идет загрузка</>
+
+    const fetchVideo = async () => {
+        try {
+            const response: AxiosResponse = await axios.get(`${process.env.NEXT_PUBLIC_URL_BACK}/videos/stream/${video._id}`, {
+                responseType: 'arraybuffer',
+            });
+
+            if (response.status == StatusCodes.OK) {
+                const videoBlob: Blob = new Blob([response.data], { type: 'video/mp4' });
+                const videoUrl: string = URL.createObjectURL(videoBlob);
+                if (videoRef.current) {
+                    videoRef.current.src = videoUrl;
+                } else {
+                    setErrorVideo(true);
+                }
             }
-        </div>
-    )
+        } catch (error) {
+            setErrorVideo(true);
+        }
+    };
+
+
+    const upCountView = async () => {
+        if (user && video) {
+            const response: AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/view/${video._id}/${user._id}`);
+            if (response.status == StatusCodes.CREATED) {
+                setCountView(response.data.views);
+            } else {
+                setCountView(video.viewCount);
+            }
+        }
+    }
+
+    if (errorVideo) {
+        return <h1>Ошибка загрузки видео :( </h1>
+    } else {
+        return (
+            <MainLayout>
+                <PrivateRoute>
+                    {
+                        video ?
+                            <>
+                                <video ref={videoRef} controls style={{ width: "300px" }} />
+                                <p>Название {video.name}</p>
+                                <p>Описание {video.description}</p>
+                                <p>Количество просмотров {video.viewCount}</p>
+                                <button onClick={() => router.back()}>back</button>
+                            </>
+                            :
+                            <>Идет загрузка</>
+                    }
+                </PrivateRoute>
+            </MainLayout>
+        )
+    }
 }
 
 

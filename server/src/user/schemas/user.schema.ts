@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import * as mongoose from "mongoose";
-import { History } from "src/history/schemas/history.schema";
 import { Video } from "src/video/schemas/video.schema";
+import { View } from "src/view/schemas/view.schema";
 
 export type UserDocument = User & Document;
 
@@ -28,6 +28,9 @@ export class User {
 
     @Prop({ type: [{ type: String }] })
     tags: string[];
+
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'VideoView' }] })
+    videoViews: View[];
 
     @Prop({ type: String, enum: ['USER', 'ADMIN'], default: 'USER' })
     role: string
