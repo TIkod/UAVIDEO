@@ -39,11 +39,9 @@ export const verifyUser = createAsyncThunk(
     'user/verifyUser',
     async (token: string) => {
         const response: AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/user/verify-email`, { verificationToken: token });
-        console.log(response)
         const data = response.data.user;
         localStorage.setItem('token', response.data.token);
         const user = { _id: data.id, email: data.email, name: data.name, verified: data.isVerified };
-        console.log(user)
         return user;
     }
 )

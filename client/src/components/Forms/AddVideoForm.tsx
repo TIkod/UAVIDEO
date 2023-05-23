@@ -27,7 +27,6 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({ id }) => {
     };
 
     const handleSubmit = (event: React.FormEvent) => {
-        console.log(videoData)
         dispatch(addVideo(videoData))
         event.preventDefault();
     };

@@ -77,7 +77,6 @@ export class UserService {
         }
 
         const accessToken: string = this.jwtService.sign({ _id: user.id, email: user.email, name: user.name, verified: user.isVerified, token: user.verificationToken }, { expiresIn: '1h' });
-        console.log(accessToken);
         return { accessToken };
     }
 

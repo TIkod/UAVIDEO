@@ -26,6 +26,9 @@ export class Video {
     @Prop({ default: 0 })
     viewCount: number;
 
+    @Prop({ default: 0 })
+    likeCount: number;
+
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
     user: User;
 

@@ -46,6 +46,26 @@ export class VideoService {
         }
     }
 
+    async upLike(_id: string, likeCount: number): Promise<number> {
+        const video = await this.videoModel.findOneAndUpdate(
+            { _id },
+            { likeCount: likeCount + 1 },
+            { new: true }
+        ).exec()
+        await video.save()
+        return video.likeCount
+    }
+
+    async downLike(_id: string, likeCount: number): Promise<number> {
+        const video = await this.videoModel.findOneAndUpdate(
+            { _id },
+            { likeCount: likeCount - 1 },
+            { new: true }
+        ).exec()
+        await video.save()
+        return video.likeCount
+    }
+
     async getStreamVideo(videoId: string, response: any) {
         try {
             const video: Video = await this.videoModel.findOne({ _id: videoId }).exec();
@@ -77,7 +97,6 @@ export class VideoService {
             }
         }
         catch (err) {
-            console.log(err);
             throw new NotFoundException()
         }
     }

@@ -10,6 +10,7 @@ export interface IVideo {
     tags: string[];
     user: string;
     viewCount: number;
+    likeCount: number;
 }
 
 

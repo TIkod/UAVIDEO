@@ -27,7 +27,6 @@ export const addVideo = createAsyncThunk('videoUser/addVideo', async (videoData:
     const response: AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/videos`, formData, {
         headers: { 'Content-Type': "multipart/form-data" }
     });
-    console.log(response);
     if (response.status === StatusCodes.CREATED) {
         return response.data;
     } else {

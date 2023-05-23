@@ -24,14 +24,13 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
 
         if (requestRefresh == false) {
             setRequestRefresh(true)
-            console.log(1)
             const response: AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/user/refresh-token`, { 'token': token });
             const newToken: string = response.data.token;
 
             if (newToken == "") {
+                localStorage.clear()
                 return router.push('/user/login');
             }
-            console.log(newToken);
             localStorage.setItem('token', newToken);
             dispatch(initUser(token));
         }

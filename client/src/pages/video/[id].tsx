@@ -15,15 +15,18 @@ const VideoPage = ({ video }: { video: IVideo }) => {
     const router: NextRouter = useRouter()
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const [errorVideo, setErrorVideo] = useState(false);
-    const [countView, setCountView] = useState(0);
+    const [likeView, setLikeView] = useState(0);
 
     useEffect(() => {
         fetchVideo();
         upCountView();
+        if (video) {
+            setLikeView(video.likeCount)
+        }
     }, []);
 
 
-    const fetchVideo = async () => {
+    const fetchVideo = async (): Promise<void> => {
         try {
             const response: AxiosResponse = await axios.get(`${process.env.NEXT_PUBLIC_URL_BACK}/videos/stream/${video._id}`, {
                 responseType: 'arraybuffer',
@@ -44,13 +47,18 @@ const VideoPage = ({ video }: { video: IVideo }) => {
     };
 
 
-    const upCountView = async () => {
+    const upCountView = async (): Promise<void> => {
         if (user && video) {
-            const response: AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/view/${video._id}/${user._id}`);
+            axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/view/${video._id}/${user._id}`);
+        }
+    }
+
+
+    const changeLike = async (): Promise<void> => {
+        if (user && video) {
+            const response: AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/like/${video._id}/${user._id}`);
             if (response.status == StatusCodes.CREATED) {
-                setCountView(response.data.views);
-            } else {
-                setCountView(video.viewCount);
+                setLikeView(response.data.likeCount)
             }
         }
     }
@@ -65,9 +73,11 @@ const VideoPage = ({ video }: { video: IVideo }) => {
                         video ?
                             <>
                                 <video ref={videoRef} controls style={{ width: "300px" }} />
-                                <p>Название {video.name}</p>
-                                <p>Описание {video.description}</p>
-                                <p>Количество просмотров {video.viewCount}</p>
+                                <p>Название: {video.name}</p>
+                                <p>Описание: {video.description}</p>
+                                <p>Количество просмотров: {video.viewCount}</p>
+                                <button onClick={changeLike}>Like</button>
+                                <p>Лайки: {likeView}</p>
                                 <button onClick={() => router.back()}>back</button>
                             </>
                             :

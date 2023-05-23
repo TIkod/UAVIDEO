@@ -9,8 +9,6 @@ import { useSelector } from 'react-redux'
 const profile: React.FC = () => {
     const user: IUser | null = useSelector((state: RootState) => state.auth.user)
 
-    console.log(user)
-
     return (
         <MainLayout>
             <PrivateRoute>

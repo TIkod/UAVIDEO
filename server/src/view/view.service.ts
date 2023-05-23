@@ -31,7 +31,6 @@ export class ViewService {
             return { views: video.viewCount };
         }
         catch (error) {
-            console.log(error);
             throw new NotFoundException()
         }
     }

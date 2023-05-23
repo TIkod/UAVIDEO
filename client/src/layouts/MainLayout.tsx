@@ -1,12 +1,12 @@
 import Header from '@/components/Layout/Header';
 import VerifyText from '../components/System/VerifyText';
 import { initUser } from '@/store/features/user.slice';
-import { AppDispatch, RootState } from '@/store/store';
 import { NextRouter, useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import Footer from '@/components/Layout/Footer';
 import Main from '@/components/Layout/Main';
+import { AppDispatch, RootState } from '@/types/store.type';
 
 interface MainLayoutProps {
     children: ReactNode;

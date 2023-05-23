@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './user/user.module';
 import { FileModule } from './file/file.module';
 import { ViewModule } from './view/view.module';
+import { LikeModule } from './like/like.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ViewModule } from './view/view.module';
     VideoModule,
     ViewModule,
     FileModule,
+    LikeModule
   ]
 })
 
