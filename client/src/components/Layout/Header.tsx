@@ -1,9 +1,9 @@
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { AppDispatch, RootState } from '@/types/store.type'
+import { Disclosure } from '@headlessui/react'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { RootState } from '@/types/store.type'
 import { NextRouter, useRouter } from 'next/router'
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 const navigation = [
     { name: 'Головна', href: '/' },
@@ -20,7 +20,6 @@ const Header: React.FC = () => {
 
     const user: IUser | null = useSelector((state: RootState) => state.auth.user)
     const router: NextRouter = useRouter()
-    const dispatch: AppDispatch = useDispatch()
 
     return (
         <Disclosure as="nav" className="bg-gray-800">
