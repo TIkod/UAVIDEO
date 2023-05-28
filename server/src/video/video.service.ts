@@ -8,6 +8,7 @@ import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 import * as fs from 'fs';
 import * as path from 'path';
+import { spawn } from 'child_process';
 
 
 @Injectable()
@@ -26,8 +27,8 @@ export class VideoService {
             throw new BadRequestException(errorMessage);
         }
 
-        const videoPath = this.fileService.createFile(FileType.VIDEO, video)
-        const picturePath = this.fileService.createFile(FileType.IMAGE, picture)
+        const videoPath = await this.fileService.createFile(FileType.VIDEO, video)
+        const picturePath = await this.fileService.createFile(FileType.IMAGE, picture)
         const createdVideo = await this.videoModel.create({ ...createVideoDto, videoPath: videoPath, picturePath: picturePath })
         return await createdVideo.save();
     }
@@ -69,9 +70,9 @@ export class VideoService {
     async getStreamVideo(videoId: string, response: any) {
         try {
             const video: Video = await this.videoModel.findOne({ _id: videoId }).exec();
-            const videoPath: string = path.resolve(process.cwd(), 'static', video.videoPath)
+            const videoPath: string = path.resolve(process.cwd(), 'static', video.videoPath);
 
-            const stat: any = fs.statSync(videoPath);
+            const stat: fs.Stats = fs.statSync(videoPath);
             const fileSize: number = stat.size;
             const range: string = response.req.headers.range;
 
@@ -80,7 +81,6 @@ export class VideoService {
                 const start: number = parseInt(parts[0], 10);
                 const end: number = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
                 const chunkSize: number = end - start + 1;
-                const file: fs.ReadStream = fs.createReadStream(videoPath, { start, end });
 
                 response.status(206);
                 response.setHeader('Content-Range', `bytes ${start}-${end}/${fileSize}`);
@@ -88,16 +88,47 @@ export class VideoService {
                 response.setHeader('Content-Length', chunkSize);
                 response.setHeader('Content-Type', 'video/mp4');
 
-                file.pipe(response);
+                const ffmpegArgs: string[] = [
+                    '-i',
+                    videoPath,
+                    '-c:v',
+                    'libx264',
+                    '-preset',
+                    'slow',
+                    '-crf',
+                    '18',
+                    '-maxrate',
+                    '10M',
+                    '-bufsize',
+                    '20M',
+                    '-c:a',
+                    'copy',
+                    '-movflags',
+                    '+faststart',
+                    '-f',
+                    'mp4',
+                    'pipe:1',
+                ];
+
+                const ffmpegProcess = spawn('ffmpeg', ffmpegArgs, { stdio: ['ignore', 'pipe', 'ignore'] });
+
+                ffmpegProcess.stdout.on('data', (data) => {
+                    response.write(data);
+                });
+
+                ffmpegProcess.stdout.on('end', () => {
+                    response.end();
+                });
             } else {
                 response.status(200);
                 response.setHeader('Content-Length', fileSize);
                 response.setHeader('Content-Type', 'video/mp4');
-                fs.createReadStream(videoPath).pipe(response);
+
+                const videoStream = fs.createReadStream(videoPath);
+                videoStream.pipe(response);
             }
-        }
-        catch (err) {
-            throw new NotFoundException()
+        } catch (err) {
+            throw new NotFoundException();
         }
     }
 }
