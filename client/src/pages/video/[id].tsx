@@ -10,14 +10,17 @@ import PrivateRoute from '@/components/System/PrivateRoute'
 import MainLayout from '../../layouts/MainLayout'
 
 
-const VideoPage = ({ video }: { video: IVideo }) => {
+const VideoPage = ({ video, comments }: { video: IVideo, comments: IComment[] }) => {
     const user: IUser | null = useSelector((state: RootState) => state.auth.user)
     const router: NextRouter = useRouter()
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const [errorVideo, setErrorVideo] = useState(false);
     const [likeView, setLikeView] = useState(0);
+    const [textComment, setTextComment] = useState('');
+    const [commentsAll, setCommentsAll] = useState([] as IComment[]);
 
     useEffect(() => {
+        setCommentsAll(comments)
         fetchVideo();
         upCountView();
         if (video) {
@@ -63,6 +66,20 @@ const VideoPage = ({ video }: { video: IVideo }) => {
         }
     }
 
+    const addComment = async (): Promise<void> => {
+        try {
+            const response: AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/comments/`, {
+                text: textComment,
+                videoId: video._id,
+                userId: user?._id
+            });
+            const author = { id: user!._id, name: user!.name, email: user!.email }
+            setCommentsAll([...commentsAll, { text: textComment, video: video._id, author: author } as IComment])
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     if (errorVideo) {
         return <h1>Ошибка загрузки видео :( </h1>
     } else {
@@ -79,6 +96,18 @@ const VideoPage = ({ video }: { video: IVideo }) => {
                                 <button onClick={changeLike}>Like</button>
                                 <p>Лайки: {likeView}</p>
                                 <button onClick={() => router.back()}>back</button>
+                                <h2>add comment</h2>
+                                <textarea value={textComment} onChange={(e) => setTextComment(e.target.value)}></textarea>
+                                <button onClick={addComment}>add comment</button>
+                                <h3>comments</h3>
+                                {
+                                    commentsAll.map((comment: IComment) => (
+                                        <div>
+                                            <p>{comment.author.name}  {comment.author.email}</p>
+                                            <p>{comment.text}</p>
+                                        </div>
+                                    ))
+                                }
                             </>
                             :
                             <>Идет загрузка</>
@@ -94,12 +123,16 @@ export default VideoPage
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     try {
-        const response: AxiosResponse = await axios.get(`${process.env.NEXT_PUBLIC_URL_BACK}/videos/${params!.id}`)
-        const video: IVideo | '' = response.data
+        const responseVideo: AxiosResponse = await axios.get(`${process.env.NEXT_PUBLIC_URL_BACK}/videos/${params!.id}`)
+        const video: IVideo | '' = responseVideo.data
+
+        const responseComments: AxiosResponse = await axios.get(`${process.env.NEXT_PUBLIC_URL_BACK}/comments/${params!.id}`)
+        const comments: IComment[] = responseComments.data
 
         return {
             props: {
-                video
+                video,
+                comments
             }
         }
     } catch (error) {

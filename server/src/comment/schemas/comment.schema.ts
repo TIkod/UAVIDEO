@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import * as mongoose from "mongoose";
-import { Like } from "src/like/schemas/like.schema";
 import { User } from "src/user/schemas/user.schema";
 import { Video } from "src/video/schemas/video.schema";
 

@@ -8,6 +8,7 @@ import { UsersModule } from './user/user.module';
 import { FileModule } from './file/file.module';
 import { ViewModule } from './view/view.module';
 import { LikeModule } from './like/like.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { LikeModule } from './like/like.module';
     VideoModule,
     ViewModule,
     FileModule,
-    LikeModule
+    LikeModule,
+    CommentModule
   ]
 })
 
