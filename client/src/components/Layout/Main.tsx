@@ -6,7 +6,7 @@ interface MainProps {
 
 const Main: React.FC<MainProps> = ({ children }) => {
     return (
-        <div>{children}</div>
+        <div style={{ minHeight: '100vh' }}>{children}</div>
     )
 }
 
