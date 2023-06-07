@@ -38,6 +38,27 @@ export class VideoService {
         return videos
     }
 
+    async getCountViews(): Promise<number> {
+        const result = await this.videoModel.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalViews: { $sum: '$viewCount' },
+                },
+            },
+        ]);
+
+        if (result.length > 0) {
+            return result[0].totalViews;
+        } else {
+            return 0;
+        }
+    }
+
+    async getCountVideos(): Promise<number> {
+        return await this.videoModel.countDocuments()
+    }
+
     async getVideoById(id: string): Promise<Video> {
         try {
             const video: Video = await this.videoModel.findOne({ _id: id }).exec()
@@ -64,7 +85,9 @@ export class VideoService {
             { new: true }
         ).exec()
         await video.save()
-        return video.likeCount
+        if (video) {
+            return video.likeCount
+        }
     }
 
     async getStreamVideo(videoId: string, response: any) {

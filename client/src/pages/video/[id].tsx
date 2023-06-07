@@ -80,11 +80,6 @@ const VideoPage = ({ video, comments }: { video: IVideo, comments: IComment[] })
         }
     }
 
-    //<video ref={videoRef} controls style={{ width: "300px" }} />
-
-    const [isPlaying, setIsPlaying] = useState(false);
-
-
 
     if (errorVideo) {
         return <h1>Ошибка загрузки видео :( </h1>

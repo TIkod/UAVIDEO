@@ -38,7 +38,6 @@ export class UserService {
         const hashedPassword: string = await bcrypt.hash(createUserDto.password, salt);
 
 
-
         const createdUser = new this.userModel({
             email: createUserDto.email,
             password: hashedPassword,
@@ -55,6 +54,12 @@ export class UserService {
         const accessToken: string = this.jwtService.sign({ _id: createdUser.id, email: createUserDto.email, name: createUserDto.name, verified: false, token: verificationToken }, { expiresIn: '1h' });
         return { accessToken };
     }
+
+
+    async getCountUsers(): Promise<number> {
+        return await this.userModel.countDocuments();
+    }
+
 
     async login(loginUserDto: LoginUserDto): Promise<{ accessToken: string }> {
 

@@ -1,17 +1,23 @@
 import MainLayout from '@/layouts/MainLayout';
-import RegistrationForm from '../components/Forms/RegistrationForm';
-import { useEffect } from 'react';
+import { IStats } from '@/types/stats.type';
+import axios, { AxiosResponse } from 'axios';
+import { useEffect, useState } from 'react';
 
 const HomePage: React.FC = () => {
 
-    const stats = [
-        { id: 1, name: 'Стільки людей зараз дивиться український контент', value: '44 користувачів' },
-        { id: 2, name: 'стільки відео радують і дарують гарний настрій', value: '12 відеороликів' },
-        { id: 3, name: 'Стільки разів користувачі сайту побачили відео наших блогерів', value: '10 переглядів' },
-    ]
+    const [stats, setStats] = useState([] as IStats[])
+
 
     useEffect(() => {
-
+        axios.get(`${process.env.NEXT_PUBLIC_URL_BACK}/statistic`)
+            .then((response: AxiosResponse) => {
+                const data: { views: number, videos: number, users: number } = response.data
+                setStats([
+                    { id: 1, name: 'Стільки людей зараз дивиться український контент', value: `${data.users} користувачів` },
+                    { id: 2, name: 'стільки відео радують і дарують гарний настрій', value: `${data.videos} відеороликів` },
+                    { id: 3, name: 'Стільки разів користувачі сайту побачили відео наших блогерів', value: `${data.views} відеопереглядів` },
+                ])
+            })
     }, [])
 
     return (

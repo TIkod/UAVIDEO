@@ -9,6 +9,7 @@ import { FileModule } from './file/file.module';
 import { ViewModule } from './view/view.module';
 import { LikeModule } from './like/like.module';
 import { CommentModule } from './comment/comment.module';
+import { StatisticModule } from './statistic/statistic.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { CommentModule } from './comment/comment.module';
     ViewModule,
     FileModule,
     LikeModule,
-    CommentModule
+    CommentModule,
+    StatisticModule
   ]
 })
 
