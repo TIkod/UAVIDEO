@@ -189,4 +189,27 @@ export class VideoService {
             throw new NotFoundException();
         }
     }
+
+
+    async getRandom(): Promise<Video[]> {
+        const videos: Video[] = await this.videoModel.find().populate('user')
+
+        const shuffledVideos = shuffleArray(videos);
+
+        console.log(shuffledVideos)
+
+        const videosToSelect = Math.ceil(videos.length * 0.3);
+
+        const selectedVideos = shuffledVideos.slice(0, videosToSelect);
+        return selectedVideos
+
+        function shuffleArray(array: any[]) {
+            const shuffled = array.slice();
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+    }
 }

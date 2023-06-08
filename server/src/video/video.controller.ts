@@ -44,10 +44,15 @@ export class VideoController {
         return this.videoService.getNews();
     }
 
+    @Get('/random')
+    async getRandom() {
+        return this.videoService.getRandom();
+    }
 
     @Get(':id')
     async getVideoById(@Param('id') id: string): Promise<Video> {
         return this.videoService.getVideoById(id);
     }
+
 
 }

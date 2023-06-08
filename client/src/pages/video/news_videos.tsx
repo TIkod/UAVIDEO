@@ -13,7 +13,6 @@ const News_videos = () => {
 
     }, [])
 
-    console.log(videos)
 
     return (
         <MainLayout>
