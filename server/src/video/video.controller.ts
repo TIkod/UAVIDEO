@@ -49,6 +49,11 @@ export class VideoController {
         return this.videoService.getRandom();
     }
 
+    @Post('/add_videos_tags/:userId/:videoId')
+    async addVideoTags(@Param('userId') userId: string, @Param('videoId') videoId: string) {
+        this.videoService.addVideoTags(userId, videoId);
+    }
+
     @Get(':id')
     async getVideoById(@Param('id') id: string): Promise<Video> {
         return this.videoService.getVideoById(id);

@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/loginUserDto';
 import { ValidationError, validate, validateSync } from 'class-validator';
 import { plainToClass } from 'class-transformer';
+import { Video } from 'src/video/schemas/video.schema';
 
 @Injectable()
 export class UserService {

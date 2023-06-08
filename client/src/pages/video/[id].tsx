@@ -26,6 +26,7 @@ const VideoPage = ({ video, comments }: { video: IVideo, comments: IComment[] })
         if (video) {
             setLikeView(video.likeCount)
         }
+        axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/videos/add_videos_tags/${user?._id}/${video._id}`)
     }, []);
 
 
@@ -66,7 +67,8 @@ const VideoPage = ({ video, comments }: { video: IVideo, comments: IComment[] })
         }
     }
 
-    const addComment = async (): Promise<void> => {
+    const addComment = async (e: any): Promise<void> => {
+        e.preventDefault()
         try {
             const response: AxiosResponse = await axios.post(`${process.env.NEXT_PUBLIC_URL_BACK}/comments/`, {
                 text: textComment,
@@ -74,7 +76,8 @@ const VideoPage = ({ video, comments }: { video: IVideo, comments: IComment[] })
                 userId: user?._id
             });
             const author = { id: user!._id, name: user!.name, email: user!.email }
-            setCommentsAll([...commentsAll, { text: textComment, video: video._id, author: author } as IComment])
+            setCommentsAll([{ text: textComment, video: video._id, author: author } as IComment, ...commentsAll],)
+            setTextComment('')
         } catch (err) {
             console.error(err);
         }
@@ -91,6 +94,7 @@ const VideoPage = ({ video, comments }: { video: IVideo, comments: IComment[] })
                         video ?
                             <>
                                 <div className="w-full bg-gray-100">
+
                                     <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col md:flex-row md:space-x-8">
                                         <div className="w-full md:w-2/3">
                                             <div className="aspect-w-16 aspect-h-9">
@@ -101,29 +105,30 @@ const VideoPage = ({ video, comments }: { video: IVideo, comments: IComment[] })
                                         </div>
 
                                         <div className="w-full md:w-1/3 mt-4 md:mt-0">
-                                            <h2 className="text-2xl font-bold mb-2">Інтерв'ї, яке варто побачити</h2>
+                                            <h2 className="text-2xl font-bold mb-2">{video.name}</h2>
 
-                                            <p className="text-gray-600 mb-4">На цей раз, інтерв'ю яке ми взяли шокує вас. Гість нашого шоу здивує вас з перших хвилин перегляду!</p>
+                                            <p className="text-gray-600 mb-4">{video.description}</p>
 
                                             <div className="flex items-center mb-4">
                                                 <div className="mr-4">
                                                     <span className="text-gray-600">переглядів: </span>
-                                                    <span className="font-bold">12</span>
+                                                    <span className="font-bold">{video.viewCount}</span>
                                                 </div>
                                                 <div>
                                                     <span className="text-gray-600">Лайки: </span>
-                                                    <span className="font-bold">4</span>
+                                                    <span className="font-bold">{likeView}</span>
                                                 </div>
                                             </div>
 
-                                            <button className="bg-red-900 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                                            <button className="bg-red-900 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" onClick={changeLike}>
                                                 лайкнути
                                             </button>
                                         </div>
                                     </div>
+
                                     <div className="max-w-5xl mx-auto px-4 py-8">
                                         <div className="w-full md:w-2/3">
-                                            <form>
+                                            <form onSubmit={addComment}>
 
                                                 <div className="mb-4">
                                                     <label htmlFor="comment" className="block text-gray-600 mb-1">
@@ -131,6 +136,8 @@ const VideoPage = ({ video, comments }: { video: IVideo, comments: IComment[] })
                                                     </label>
                                                     <textarea
                                                         id="comment"
+                                                        value={textComment}
+                                                        onChange={(e) => setTextComment(e.target.value)}
                                                         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 resize-none"
                                                         rows={3}
                                                     ></textarea>
@@ -148,33 +155,19 @@ const VideoPage = ({ video, comments }: { video: IVideo, comments: IComment[] })
                                     <div className="max-w-5xl mx-auto px-4 py-8">
                                         <h3 className="text-lg font-bold mb-4">Коментарі</h3>
                                         <div className="space-y-4">
-                                            <div className="flex items-start">
-                                                <div className="flex-shrink-0">
-                                                    <img src="https://cdn.segodnya.ua/img/gallery/5066/23/547462_main.jpg" alt="Аватар пользователя" className="w-10 h-10 rounded-full" />
-                                                </div>
-                                                <div className="ml-4">
-                                                    <p className="font-bold">Андрій</p>
-                                                    <p>Ось це нічого собі ... Я в шоці звичайно від такого результату подій !!!</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-start">
-                                                <div className="flex-shrink-0">
-                                                    <img src="https://cdn.segodnya.ua/img/gallery/5066/23/547462_main.jpg" alt="Аватар пользователя" className="w-10 h-10 rounded-full" />
-                                                </div>
-                                                <div className="ml-4">
-                                                    <p className="font-bold">Тоня</p>
-                                                    <p>Якщо чесно, мені щось не дуже зайшло якось це відео. Минули інтерв'ю були краще :(</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex items-start">
-                                                <div className="flex-shrink-0">
-                                                    <img src="https://cdn.segodnya.ua/img/gallery/5066/23/547462_main.jpg" alt="Аватар пользователя" className="w-10 h-10 rounded-full" />
-                                                </div>
-                                                <div className="ml-4">
-                                                    <p className="font-bold">Тетяна</p>
-                                                    <p>Ось це нічого собі ... Я в шоці звичайно від такого результату подій !!!</p>
-                                                </div>
-                                            </div>
+                                            {
+                                                commentsAll.map((comment) => (
+                                                    <div className="flex items-start" key={comment._id}>
+                                                        <div className="flex-shrink-0">
+                                                            <img src="https://cdn.segodnya.ua/img/gallery/5066/23/547462_main.jpg" alt="Аватар пользователя" className="w-10 h-10 rounded-full" />
+                                                        </div>
+                                                        <div className="ml-4">
+                                                            <p className="font-bold">{comment.author.name}</p>
+                                                            <p>{comment.text}</p>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            }
                                         </div>
                                     </div>
                                 </div>

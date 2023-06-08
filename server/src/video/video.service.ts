@@ -36,6 +36,25 @@ export class VideoService {
         return await createdVideo.save();
     }
 
+    async addVideoTags(userId: string, videoId: string) {
+        const user: any = await this.userService.findById(userId);
+        const video: Video = await this.videoModel.findById(videoId);
+
+        if (!user || !video) {
+            throw new Error('User or Video not found');
+        }
+
+        const videoTags = video.tags;
+        const userTags = user.tags;
+
+        const newTags = videoTags.filter((tag) => !userTags.includes(tag));
+
+        if (newTags.length > 0) {
+            user.tags = [...userTags, ...newTags];
+            await user.save();
+        }
+    }
+
     async getNews(): Promise<Video[]> {
         const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 

@@ -3,6 +3,7 @@ import MainLayout from '@/layouts/MainLayout';
 import { RootState } from '@/types/store.type';
 import { IVideo } from '@/types/video.user.type';
 import axios, { AxiosResponse } from 'axios';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 
@@ -10,6 +11,7 @@ const Recommendations = () => {
 
     const [videos, setVideos] = useState([] as IVideo[])
     const user: IUser | null = useSelector((store: RootState) => store.auth.user)
+    const router = useRouter()
 
     useEffect(() => {
         if (user) {
@@ -28,7 +30,7 @@ const Recommendations = () => {
                     <p className="text-lg mb-4">Тут ви можете подивитись відео які були підібрані виходячи з ваших уподобань.</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {videos.map((video) => (
-                            <div key={video._id} className="bg-white rounded shadow p-4">
+                            <div key={video._id} className="bg-white rounded shadow p-4" onClick={() => router.push(`/video/${video._id}`)}>
                                 <img src={process.env.NEXT_PUBLIC_URL_BACK + '/' + video.picturePath} alt={video.name} className="w-full h-48 object-cover mb-4" />
                                 <h2 className="text-lg font-bold">{video.name}</h2>
                                 <p className="text-sm text-gray-500 mb-2">{typeof video.user == "object" ? video.user.name : video.user}</p>

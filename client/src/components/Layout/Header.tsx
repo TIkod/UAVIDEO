@@ -1,9 +1,10 @@
 import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import { RootState } from '@/types/store.type'
+import { AppDispatch, RootState } from '@/types/store.type'
 import { NextRouter, useRouter } from 'next/router'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { exit } from '@/store/features/user.slice'
 
 const navigation = [
     { name: 'Головна', href: '/' },
@@ -20,6 +21,8 @@ const Header: React.FC = () => {
 
     const user: IUser | null = useSelector((state: RootState) => state.auth.user)
     const router: NextRouter = useRouter()
+
+    const dispatch: AppDispatch = useDispatch()
 
     return (
         <Disclosure as="nav" className="bg-gray-800">
@@ -63,6 +66,12 @@ const Header: React.FC = () => {
                                     src="https://cdn.segodnya.ua/img/gallery/5066/23/547462_main.jpg"
                                     alt=""
                                 />
+                            </div>
+                            <div className={classNames(['text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']
+                            )} style={{ display: "flex", alignItems: 'center', cursor: 'pointer', textAlign: 'center' }} onClick={() => dispatch(exit())}>
+                                <div>
+                                    Вийти
+                                </div>
                             </div>
                         </div>
                     </div>
