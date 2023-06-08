@@ -9,11 +9,6 @@ import { useSelector } from 'react-redux'
 const profile: React.FC = () => {
     const user: IUser | null = useSelector((state: RootState) => state.auth.user)
 
-    const videos = [
-        { id: 1, title: 'Видео 1' },
-        { id: 2, title: 'Видео 2' },
-        { id: 3, title: 'Видео 3' },
-    ];
     const [videoTitle, setVideoTitle] = useState('');
     const [videoDescription, setVideoDescription] = useState('');
     const [videoFile, setVideoFile] = useState(null);

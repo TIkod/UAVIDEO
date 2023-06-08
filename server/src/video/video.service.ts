@@ -49,7 +49,7 @@ export class VideoService {
         return []
     }
 
-    async getVideosByUser(userId: string, count: number = 5, offset: number = 0): Promise<Video[]> {
+    async getVideosByUser(userId: string, count: number = 20, offset: number = 0): Promise<Video[]> {
         const videos: Video[] = await this.videoModel.find({ user: userId }).skip(Number(offset)).limit(Number(count));
         return videos
     }
