@@ -9,12 +9,15 @@ import { plainToClass } from 'class-transformer';
 import * as fs from 'fs';
 import * as path from 'path';
 import { spawn } from 'child_process';
+import { User } from 'src/user/schemas/user.schema';
+import { UserService } from 'src/user/user.service';
 
 
 @Injectable()
 export class VideoService {
     constructor(
         @InjectModel(Video.name) private videoModel: Model<VideoDocument>,
+        private userService: UserService,
         private fileService: FileService
     ) { }
 
@@ -36,6 +39,25 @@ export class VideoService {
     async getVideosByUser(userId: string, count: number = 5, offset: number = 0): Promise<Video[]> {
         const videos: Video[] = await this.videoModel.find({ user: userId }).skip(Number(offset)).limit(Number(count));
         return videos
+    }
+
+    async getVideosByUserTags(userId: string): Promise<Video[]> {
+        const user: any = await this.userService.findById(userId);
+
+        if (!user) {
+            return [];
+        }
+
+        const tagsRegex = user.tags.map(tag => new RegExp(tag, 'i'));
+
+        const videos: Video[] = await this.videoModel.find({
+            tags: { $in: tagsRegex },
+        }).populate('user');
+        if (videos.length > 0) {
+            return videos;
+        }
+
+        return [];
     }
 
     async getCountViews(): Promise<number> {

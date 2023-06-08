@@ -8,6 +8,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 export class VideoController {
     constructor(private readonly videoService: VideoService) { }
 
+
     @Post()
     @UseInterceptors(FileFieldsInterceptor([
         { name: 'picture', maxCount: 1 },
@@ -31,6 +32,11 @@ export class VideoController {
     @Get('user/:userId')
     async getVideosByUser(@Param('userId') userId: string, @Query('count') count: number, @Query('offset') offset: number,): Promise<Video[]> {
         return this.videoService.getVideosByUser(userId, count, offset);
+    }
+
+    @Get('user/:userId/tags')
+    async getVideosByUserTags(@Param('userId') userId: string): Promise<Video[]> {
+        return this.videoService.getVideosByUserTags(userId);
     }
 
     @Get('/stream/:id')

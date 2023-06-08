@@ -30,7 +30,7 @@ export class Video {
     likeCount: number;
 
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-    user: User;
+    user: mongoose.Types.ObjectId;
 
     @Prop({ type: [{ type: String }] })
     tags: string[];

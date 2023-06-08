@@ -98,6 +98,7 @@ export class UserService {
         }
     }
 
+
     private generateVerificationToken(): string {
         const token: string = randomBytes(32).toString('hex');
         return token;

@@ -8,7 +8,7 @@ export interface IVideo {
     picturePath: string;
     comments: string[];
     tags: string[];
-    user: string;
+    user: string | IUser;
     viewCount: number;
     likeCount: number;
 }
