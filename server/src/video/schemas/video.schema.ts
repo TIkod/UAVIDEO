@@ -1,8 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import * as mongoose from "mongoose";
 import { Comment } from "src/comment/schemas/comment.schema";
-import { Like } from "src/like/schemas/like.schema";
-import { User } from "src/user/schemas/user.schema";
 
 export type VideoDocument = Video & Document;
 
@@ -34,6 +32,9 @@ export class Video {
 
     @Prop({ type: [{ type: String }] })
     tags: string[];
+
+    @Prop({ default: Date.now })
+    createdAt: Date;
 }
 
 export const VideoSchema: SchemaFactory = SchemaFactory.createForClass(Video);

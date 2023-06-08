@@ -22,14 +22,13 @@ export class FileService {
         fs.mkdirSync(filePath, { recursive: true });
       }
 
-      const fileBuffer: Buffer = file.buffer;
-      fs.writeFileSync(path.resolve(filePath, fileName), fileBuffer);
-
       if (type === FileType.VIDEO) {
+        const fileBuffer: Buffer = file.buffer;
+        fs.writeFileSync(path.resolve(filePath, type, fileName), fileBuffer);
         const compressedFileName: string = uuid() + '.' + fileExtension;
-        const compressedFilePath: string = path.resolve(filePath, compressedFileName);
+        const compressedFilePath: string = path.resolve(filePath, type, compressedFileName);
         await new Promise<void>((resolve, reject) => {
-          ffmpeg(path.resolve(filePath, fileName))
+          ffmpeg(path.resolve(filePath, type, fileName))
             .outputOptions('-crf 28')
             .on('start', function (commandLine) {
             })
@@ -37,15 +36,18 @@ export class FileService {
               reject(err);
             })
             .on('end', function () {
-              fs.unlinkSync(path.resolve(filePath, fileName));
+              fs.unlinkSync(path.resolve(filePath, type, fileName));
               resolve();
             })
             .save(compressedFilePath);
         });
-        return type + '/' + compressedFileName;
+        return compressedFilePath;
+      } else {
+        const fileBuffer: Buffer = file.buffer;
+        fs.writeFileSync(path.resolve(filePath, type, fileName), fileBuffer);
+        return type + '/' + fileName;
       }
 
-      return type + '/' + fileName;
     } catch (err) {
       throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

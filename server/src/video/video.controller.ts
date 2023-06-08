@@ -24,11 +24,6 @@ export class VideoController {
         return this.videoService.createVideo(createVideoDto, picture[0], video[0]);
     }
 
-    @Get(':id')
-    async getVideoById(@Param('id') id: string): Promise<Video> {
-        return this.videoService.getVideoById(id);
-    }
-
     @Get('user/:userId')
     async getVideosByUser(@Param('userId') userId: string, @Query('count') count: number, @Query('offset') offset: number,): Promise<Video[]> {
         return this.videoService.getVideosByUser(userId, count, offset);
@@ -43,4 +38,16 @@ export class VideoController {
     async streamVideo(@Param('id') videoId: string, @Res() response: Response) {
         return this.videoService.getStreamVideo(videoId, response);
     }
+
+    @Get('/news')
+    async getNews() {
+        return this.videoService.getNews();
+    }
+
+
+    @Get(':id')
+    async getVideoById(@Param('id') id: string): Promise<Video> {
+        return this.videoService.getVideoById(id);
+    }
+
 }

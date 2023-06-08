@@ -18,7 +18,8 @@ const Recommendations = () => {
         }
     }, [user])
 
-    console.log(videos)
+
+    console.log(videos);
 
     return (
         <MainLayout>
@@ -29,7 +30,7 @@ const Recommendations = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {videos.map((video) => (
                             <div key={video._id} className="bg-white rounded shadow p-4">
-                                <img src={video.picturePath} alt={video.name} className="w-full h-48 object-cover mb-4" />
+                                <img src={process.env.NEXT_PUBLIC_URL_BACK + '/' + video.picturePath} alt={video.name} className="w-full h-48 object-cover mb-4" />
                                 <h2 className="text-lg font-bold">{video.name}</h2>
                                 <p className="text-sm text-gray-500 mb-2">{typeof video.user == "object" ? video.user.name : video.user}</p>
                                 <p className="text-sm text-gray-500">{`${video.viewCount} переглядів`}</p>

@@ -7,9 +7,9 @@ import { useSelector } from 'react-redux'
 
 const navigation = [
     { name: 'Головна', href: '/' },
-    { name: 'Новинки', href: '#' },
-    { name: 'Рекомендації', href: '#' },
-    { name: 'Рандомні відео', href: '#' },
+    { name: 'Новинки', href: '/video/news_videos' },
+    { name: 'Рекомендації', href: '/video/recommendations' },
+    { name: 'Рандомні відео', href: '/video/random' },
 ]
 
 function classNames(classes: string[]) {

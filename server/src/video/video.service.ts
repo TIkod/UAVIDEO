@@ -36,6 +36,19 @@ export class VideoService {
         return await createdVideo.save();
     }
 
+    async getNews(): Promise<Video[]> {
+        const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+        const videos: Video[] = await this.videoModel.find({
+            createdAt: { $gte: twentyFourHoursAgo },
+        }).populate('user');
+
+        if (videos) {
+            return videos
+        }
+        return []
+    }
+
     async getVideosByUser(userId: string, count: number = 5, offset: number = 0): Promise<Video[]> {
         const videos: Video[] = await this.videoModel.find({ user: userId }).skip(Number(offset)).limit(Number(count));
         return videos
