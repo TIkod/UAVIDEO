@@ -27,5 +27,5 @@ export interface IVideoData {
     video: any,
     picture: any,
     user: string,
-    tags: string
+    tags: string[]
 }

@@ -2,19 +2,45 @@ import MyVideo from '@/components/MyVideo'
 import AddVideoForm from '../../components/Forms/AddVideoForm'
 import PrivateRoute from '@/components/System/PrivateRoute'
 import MainLayout from '@/layouts/MainLayout'
-import { RootState } from '@/types/store.type'
+import { AppDispatch, RootState } from '@/types/store.type'
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { addVideo } from '@/store/features/video.user.slice'
 
 const profile: React.FC = () => {
     const user: IUser | null = useSelector((state: RootState) => state.auth.user)
+    const dispatch: AppDispatch = useDispatch()
 
     const [videoTitle, setVideoTitle] = useState('');
     const [videoDescription, setVideoDescription] = useState('');
-    const [videoFile, setVideoFile] = useState(null);
-    const [imageFile, setImageFile] = useState(null);
+    const [videoFile, setVideoFile] = useState({});
+    const [imageFile, setImageFile] = useState({});
     const [hashtags, setHashtags] = useState<string[]>([]);
     const [currentHashtag, setCurrentHashtag] = useState('');
+
+    const createVideo = (e: any) => {
+        e.preventDefault();
+        if (user) {
+            const videoData = {
+                name: videoTitle,
+                description: videoDescription,
+                video: videoFile,
+                picture: imageFile,
+                user: user._id,
+                tags: hashtags
+            }
+            dispatch(addVideo(videoData))
+        }
+
+        setVideoTitle('')
+        setVideoDescription('')
+        setVideoFile({})
+        setImageFile({})
+        setHashtags([])
+        setCurrentHashtag('')
+
+        alert('Відео буде додано після завантаження')
+    }
 
     const handleVideoTitleChange = (e: any) => {
         setVideoTitle(e.target.value);
@@ -64,7 +90,7 @@ const profile: React.FC = () => {
                             <p className="text-gray-900">{user?.email}</p>
                         </div>
                         <h2 className="text-lg font-semibold mb-2">Добавити відео</h2>
-                        <form className="mb-4">
+                        <form className="mb-4" onSubmit={createVideo}>
                             <div className="mb-4">
                                 <label htmlFor="videoTitle" className="text-gray-700">
                                     Назва відео:
