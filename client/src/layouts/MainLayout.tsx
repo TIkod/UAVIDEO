@@ -7,13 +7,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import Footer from '@/components/Layout/Footer';
 import Main from '@/components/Layout/Main';
 import { AppDispatch, RootState } from '@/types/store.type';
+import Head from 'next/head';
 
 interface MainLayoutProps {
     children: ReactNode;
+    title?: string;
 }
 
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ children, title }) => {
 
     const user: IUser | null = useSelector((state: RootState) => state.auth.user)
     const router: NextRouter = useRouter()
@@ -40,6 +42,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     if (user) {
         return (
             <>
+                <Head>
+                    <title>UAVIDEO {title || ''}</title>
+                    <meta name="description" content="video, hosting, videohosting, freevideo, topvideo" />
+                </Head>
                 {
                     user.verified ?
                         <>

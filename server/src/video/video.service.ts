@@ -34,7 +34,7 @@ export class VideoService {
         const picturePath = await this.fileService.createFile(FileType.IMAGE, picture)
         const createdVideo = await this.videoModel.create({ ...createVideoDto, videoPath: videoPath, picturePath: picturePath })
         return await createdVideo.save();
-    }
+    }   
 
     async addVideoTags(userId: string, videoId: string) {
         const user: any = await this.userService.findById(userId);

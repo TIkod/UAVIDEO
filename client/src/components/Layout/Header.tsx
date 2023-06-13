@@ -5,6 +5,7 @@ import { NextRouter, useRouter } from 'next/router'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { exit } from '@/store/features/user.slice'
+import { RiSearchLine } from 'react-icons/ri';
 
 const navigation = [
     { name: 'Головна', href: '/' },
@@ -40,6 +41,7 @@ const Header: React.FC = () => {
                                     )}
                                 </Disclosure.Button>
                             </div>
+
                             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                                 <div className="hidden sm:ml-6 sm:block">
                                     <div className="flex space-x-4">
@@ -55,6 +57,20 @@ const Header: React.FC = () => {
                                         ))}
                                     </div>
                                 </div>
+                            </div>
+                            <div className="flex items-center" style={{ marginRight: "20px" }}>
+                                <input
+                                    type="text"
+                                    placeholder="Поиск видео"
+                                    className="px-4 py-2 rounded-lg bg-gray-700 text-gray-300 focus:outline-none"
+                                />
+                                <button
+                                    type="button"
+                                    className="ml-2 px-4 py-2 rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600 focus:outline-none"
+
+                                >
+                                    <RiSearchLine className="h-5 w-5" />
+                                </button>
                             </div>
                             <div className={classNames(['text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']
                             )} style={{ display: "flex", alignItems: 'center', cursor: 'pointer' }} onClick={() => router.push('/user/profile')}>

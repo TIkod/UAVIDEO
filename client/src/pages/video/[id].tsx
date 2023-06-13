@@ -88,7 +88,7 @@ const VideoPage = ({ video, comments }: { video: IVideo, comments: IComment[] })
         return <h1>Ошибка загрузки видео :( </h1>
     } else {
         return (
-            <MainLayout>
+            <MainLayout title={video.name}>
                 <PrivateRoute>
                     {
                         video ?
