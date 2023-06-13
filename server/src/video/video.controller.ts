@@ -3,6 +3,7 @@ import { VideoService } from './video.service';
 import { Video } from './schemas/video.schema';
 import { CreateVideoDto } from './dto/CreateVideoDto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { query } from 'express';
 
 @Controller('videos')
 export class VideoController {
@@ -54,10 +55,13 @@ export class VideoController {
         this.videoService.addVideoTags(userId, videoId);
     }
 
+    @Get('/search')
+    async searchVideo(@Query() query) {
+        return this.videoService.searchVideo(query.q);
+    }
+
     @Get(':id')
     async getVideoById(@Param('id') id: string): Promise<Video> {
         return this.videoService.getVideoById(id);
     }
-
-
 }

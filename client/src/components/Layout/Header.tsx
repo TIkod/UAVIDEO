@@ -2,7 +2,7 @@ import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { AppDispatch, RootState } from '@/types/store.type'
 import { NextRouter, useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { exit } from '@/store/features/user.slice'
 import { RiSearchLine } from 'react-icons/ri';
@@ -24,6 +24,12 @@ const Header: React.FC = () => {
     const router: NextRouter = useRouter()
 
     const dispatch: AppDispatch = useDispatch()
+
+    const [search, setSearch] = useState('')
+
+    const goSearch = () => {
+        router.push(`/video/search/${search}`)
+    }
 
     return (
         <Disclosure as="nav" className="bg-gray-800">
@@ -62,12 +68,14 @@ const Header: React.FC = () => {
                                 <input
                                     type="text"
                                     placeholder="Поиск видео"
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    value={search}
                                     className="px-4 py-2 rounded-lg bg-gray-700 text-gray-300 focus:outline-none"
                                 />
                                 <button
                                     type="button"
                                     className="ml-2 px-4 py-2 rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600 focus:outline-none"
-
+                                    onClick={goSearch}
                                 >
                                     <RiSearchLine className="h-5 w-5" />
                                 </button>

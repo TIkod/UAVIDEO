@@ -34,7 +34,7 @@ export class VideoService {
         const picturePath = await this.fileService.createFile(FileType.IMAGE, picture)
         const createdVideo = await this.videoModel.create({ ...createVideoDto, videoPath: videoPath, picturePath: picturePath })
         return await createdVideo.save();
-    }   
+    }
 
     async addVideoTags(userId: string, videoId: string) {
         const user: any = await this.userService.findById(userId);
@@ -230,5 +230,16 @@ export class VideoService {
             }
             return shuffled;
         }
+    }
+
+    async searchVideo(query: string) {
+        const videos: Video[] = await this.videoModel.find({
+            name: {
+                $regex: query,
+                $options: "i"
+            }
+        }).populate('user');
+        console.log(videos);
+        return videos
     }
 }
