@@ -36,7 +36,8 @@ const verifyEmail = () => {
     }, [user])
 
     return (
-        <div>Подтверждение почты</div>
+        <div>
+            Підтвердження пошти...</div>
     )
 }
 

@@ -22,8 +22,8 @@ export class MailService {
         const mailOptions = {
             from: this.configService.get('MAIL_SENDER'),
             to: email,
-            subject: 'Подтверждение адреса электронной почты',
-            text: `Пожалуйста, перейдите по ссылке, чтобы подтвердить свой адрес электронной почты: ${verificationLink}`,
+            subject: 'Підтвердження адреси електронної пошти',
+            text: `Будь ласка, перейдіть за посиланням, щоб підтвердити свою адресу електронної пошти: ${verificationLink}`,
         };
 
         await this.transporter.sendMail(mailOptions);
